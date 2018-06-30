@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Parsing a JSON according to the given schema
+ */
 public class SchemaParser {
 
     private boolean replacePrimitive(Map.Entry<String, JsonElement> input, JsonObject schemaObject) {
@@ -105,8 +108,14 @@ public class SchemaParser {
         return true;
     }
 
-    public String startFromObject(String inputJson, String inputSchema) {
-        //Creating a tree model from schema
+    /**
+     * Parsing inputJson according to the inputSchema.
+     *
+     * @param inputJson   JSON needed to be parsed.
+     * @param inputSchema JSON schema.
+     * @return Parsed JSON as a String.
+     */
+    public String parse(String inputJson, String inputSchema) {
         JsonParser parser = new JsonParser();
         JsonElement schema = parser.parse(inputSchema);
         JsonObject schemaObject = (JsonObject) schema;
@@ -119,7 +128,6 @@ public class SchemaParser {
         Iterator<Map.Entry<String, JsonElement>> inputIterator = entryInput.iterator();
         while (inputIterator.hasNext()) {
             Map.Entry<String, JsonElement> temp = inputIterator.next();
-            //System.out.println(temp.getKey() + " : " + temp.getValue());
             JsonObject tempSchema = (JsonObject) schemaObject.get(temp.getKey());
             String type = tempSchema.get("type").getAsString().replaceAll("^\"|\"$", "");
             if (type.equals("string") || type.equals("number") || type.equals("boolean")) {
@@ -129,8 +137,6 @@ public class SchemaParser {
             } else if (type.equals("object")) {
                 this.parseObject(temp, tempSchema);
             }
-            //After parse
-            //System.out.println(temp.getKey() + " : " + temp.getValue());
         }
         return inputObject.toString();
     }

@@ -1,4 +1,4 @@
-package com.GDSoft.JSONLibs;/*
+/*
  * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@ package com.GDSoft.JSONLibs;/*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+package com.GDSoft.JSONLibs;
 
 import com.google.gson.*;
 import org.apache.commons.lang.StringUtils;
@@ -26,7 +26,8 @@ import java.util.regex.Pattern;
 public class SchemaBuilder {
 
     private static final String HTTP_WSO2JSONSCHEMA_ORG = "http://wso2jsonschema.org";
-    private static final String HTTP_JSON_SCHEMA_ORG_DRAFT_04_SCHEMA = "http://wso2.org/json-schema/wso2-data-mapper-v5.0.0/schema#";
+    private static final String HTTP_JSON_SCHEMA_ORG_DRAFT_04_SCHEMA =
+            "http://wso2.org/json-schema/wso2-data-mapper-v5.0.0/schema#";
     private static final String ARRAY = "array";
     private static final String OBJECT = "object";
     private static final String ID = "id";
@@ -74,7 +75,7 @@ public class SchemaBuilder {
             // TODO handle parsing exception
             jsonObject = (JsonObject) jsonParser.parse(jsonString);
             Set<Entry<String, JsonElement>> entrySet = jsonObject.entrySet();
-            if(type.toString().toLowerCase().equals(XML)){
+            if (type.toString().toLowerCase().equals(XML)) {
                 //If type is xml, then check if it has a root element
                 if (entrySet.size() == 1) {
                     for (Entry<String, JsonElement> entry : entrySet) {
@@ -91,7 +92,7 @@ public class SchemaBuilder {
                 } else {
                     firstObject = jsonObject;
                 }
-            }else{
+            } else {
                 //If type is json then wrap the content with a root element, DEVTOOLESB-373
                 firstObject = jsonObject;
             }
@@ -183,7 +184,8 @@ public class SchemaBuilder {
                             String contentKey = contentEntry.getKey();
                             if (contentKey.equals(CONTENT)) {
                                 TypeEnum propertyType = RealTypeOf(contentEntry.getValue());
-                                addPrimitiveToParent(parent, id, propertyType.toString().toLowerCase(), propertyValueType,
+                                addPrimitiveToParent(parent, id, propertyType.toString().toLowerCase(),
+                                        propertyValueType,
                                         elementIdentifierMap);
                             }
                         }
@@ -452,10 +454,10 @@ public class SchemaBuilder {
                 leaf.setType(type);
                 primitive.setType(TypeEnum.OBJECT.toString().toLowerCase());
                 primitive.addAttribute(idwithoutAtSign, leaf);
-            }else if (attributeId.startsWith(HASHCONTENT)) {
+            } else if (attributeId.startsWith(HASHCONTENT)) {
                 addValueObject(primitive, attributeElement);
                 primitive.setType(TypeEnum.OBJECT.toString().toLowerCase());
-            }else {
+            } else {
                 primitive.setType(attributeValueType.toString().toLowerCase());
             }
         }
@@ -562,7 +564,7 @@ public class SchemaBuilder {
 
 
     private void addValueObject(JsonSchema parent, JsonElement valueObject) {
-        if(valueObject instanceof JsonObject){
+        if (valueObject instanceof JsonObject) {
             Set<Entry<String, JsonElement>> contentEntrySet = valueObject.getAsJsonObject().entrySet();
             for (Entry<String, JsonElement> contentEntry : contentEntrySet) {
                 String contentKey = contentEntry.getKey();
@@ -573,7 +575,7 @@ public class SchemaBuilder {
                     parent.addCustomObject("value", object);
                 }
             }
-        }else if(valueObject instanceof JsonPrimitive){
+        } else if (valueObject instanceof JsonPrimitive) {
             TypeEnum propertyType = RealTypeOf(valueObject);
             JsonObject object = new JsonObject();
             object.addProperty("type", propertyType.toString().toLowerCase());
@@ -582,10 +584,9 @@ public class SchemaBuilder {
 
     }
 
-
     private String getAttributeType(JsonElement attrObject) {
         TypeEnum propertyType = null;
-        if(attrObject instanceof JsonObject){
+        if (attrObject instanceof JsonObject) {
             Set<Entry<String, JsonElement>> contentEntrySet = attrObject.getAsJsonObject().entrySet();
             for (Entry<String, JsonElement> contentEntry : contentEntrySet) {
                 String contentKey = contentEntry.getKey();
@@ -594,7 +595,7 @@ public class SchemaBuilder {
 
                 }
             }
-        }else if(attrObject instanceof JsonPrimitive){
+        } else if (attrObject instanceof JsonPrimitive) {
             propertyType = RealTypeOf(attrObject);
         }
         return propertyType.toString().toLowerCase();

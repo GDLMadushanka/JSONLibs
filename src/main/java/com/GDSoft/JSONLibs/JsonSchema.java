@@ -1,4 +1,4 @@
-package com.GDSoft.JSONLibs;/*
+/*
  * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,7 @@ package com.GDSoft.JSONLibs;/*
  * limitations under the License.
  */
 
-
+package com.GDSoft.JSONLibs;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -79,28 +79,28 @@ public class JsonSchema {
         return "";
     }
 
-    public JsonObject getPropertiesObject(){
+    public JsonObject getPropertiesObject() {
         if (schema.get("properties") == null) {
             schema.add("properties", new JsonObject());
         }
         return schema.get("properties").getAsJsonObject();
     }
 
-    public JsonObject getAttributesObject(){
+    public JsonObject getAttributesObject() {
         if (schema.get("attributes") == null) {
             schema.add("attributes", new JsonObject());
         }
         return schema.get("attributes").getAsJsonObject();
     }
 
-    public JsonArray getRequiredObject(){
+    public JsonArray getRequiredObject() {
         if (schema.get("required") == null) {
             schema.add("required", new JsonArray());
         }
         return schema.get("required").getAsJsonArray();
     }
 
-    public JsonArray getItemsArrayObject(){
+    public JsonArray getItemsArrayObject() {
         if (schema.get("items") == null) {
             schema.add("items", new JsonArray());
         }
@@ -128,7 +128,7 @@ public class JsonSchema {
         propertiesObj.add(name, leaf.getAsJsonObject());
     }
 
-    public void createItemsArray(){
+    public void createItemsArray() {
         getItemsArrayObject();
     }
 
