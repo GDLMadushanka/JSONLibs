@@ -2,7 +2,7 @@
   "fruit"           : "Apple",
   "price"           : 23,
   "simpleObject"    : {"age":234},
-  "simpleArray"     : [true,false,true],
+  "simpleArray"     : [true,false,"true"],
   "objWithArray"    : {"marks":[34,45,56,67]},
   "arrayOfObjects"  : [{"maths":90},{"physics":95},{"chemistry":65}],
   "singleObjArray"  : [1.618]

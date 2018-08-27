@@ -17,6 +17,7 @@ public class SchemaParser {
         String tempString = input.getValue().toString().replaceAll("^\"|\"$", "");
         try {
             switch (type) {
+                case "integer":
                 case "number": {
                     primitive = new JsonPrimitive(Float.valueOf(tempString));
                     input.setValue(primitive);
@@ -86,7 +87,7 @@ public class SchemaParser {
         for (Map.Entry<String, JsonElement> entry : entries) {
             JsonObject schemaObj = schemaObject.getAsJsonObject(entry.getKey());
             String type = schemaObj.get("type").toString().replaceAll("^\"|\"$", "");
-            if (type.equals("number") || type.equals("boolean") || type.equals("string")) {
+            if (type.equals("number") || type.equals("boolean") || type.equals("string") || type.equals("integer")) {
                 replacePrimitive(entry, schemaObj);
             } else if (type.equals("array")) {
                 parseArray(entry, schemaObj);
@@ -130,7 +131,7 @@ public class SchemaParser {
             Map.Entry<String, JsonElement> temp = inputIterator.next();
             JsonObject tempSchema = (JsonObject) schemaObject.get(temp.getKey());
             String type = tempSchema.get("type").getAsString().replaceAll("^\"|\"$", "");
-            if (type.equals("string") || type.equals("number") || type.equals("boolean")) {
+            if (type.equals("string") || type.equals("number") || type.equals("boolean") || type.equals("integer")) {
                 this.replacePrimitive(temp, tempSchema);
             } else if (type.equals("array")) {
                 this.parseArray(temp, tempSchema);

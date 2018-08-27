@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "fruit": {
+      "type": "string"
+    },
+    "price": {
+      "type": "integer"
+    },
+    "simpleObject": {
+      "type": "object",
+      "properties": {
+        "age": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "age"
+      ]
+    },
+    "simpleArray": {
+      "type": "array",
+      "items": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "objWithArray": {
+      "type": "object",
+      "properties": {
+        "marks": {
+          "type": "array",
+          "items": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        }
+      },
+      "required": [
+        "marks"
+      ]
+    },
+    "arrayOfObjects": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "maths": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "maths"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "physics": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "physics"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "chemistry": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "chemistry"
+          ]
+        }
+      ]
+    },
+    "singleObjArray": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number"
+        }
+      ]
+    }
+  },
+  "required": [
+    "fruit",
+    "price",
+    "simpleObject",
+    "simpleArray",
+    "objWithArray",
+    "arrayOfObjects",
+    "singleObjArray"
+  ]
+}
