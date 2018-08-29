@@ -41,47 +41,38 @@ public class SchemaParser {
     }
 
     private boolean parseArray(Map.Entry<String, JsonElement> input, JsonObject schema) {
-        String type = ((JsonObject) (schema.getAsJsonArray("items").get(0))).get("type").toString().replaceAll
-                ("^\"|\"$", "");
-
         //Convert single element to an array
         if (input.getValue().isJsonPrimitive()) {
             JsonArray array = new JsonArray();
             array.add(input.getValue());
             input.setValue(array);
-        }
-
-        JsonArray arr = (JsonArray) input.getValue();
-        if (type.equals("number") || type.equals("boolean") || type.equals("string")) {
-            for (int i = 0; i < arr.size(); i++) {
-                String tempString = arr.get(i).toString().replaceAll("^\"|\"$", "");
-                JsonPrimitive primitive = null;
-                if (type.equals("number")) {
-                    primitive = new JsonPrimitive(Float.parseFloat(tempString));
-                } else if (type.equals("boolean")) {
-                    primitive = new JsonPrimitive(Boolean.parseBoolean(tempString));
-                } else primitive = new JsonPrimitive(tempString);
-                arr.set(i, primitive);
+        } else {
+            JsonArray jsonArray = schema.getAsJsonArray("items");
+            JsonArray arr = (JsonArray) input.getValue();
+            for (int j = 0; j < jsonArray.size(); j++) {
+                String type = ((JsonObject) (jsonArray.get(j))).get("type").toString().replaceAll
+                        ("^\"|\"$", "");
+                if (type.equals("number") || type.equals("boolean") || type.equals("string") || type.equals("integer")) {
+                    String tempString = arr.get(j).toString().replaceAll("^\"|\"$", "");
+                    JsonPrimitive primitive = null;
+                    if (type.equals("number") || type.equals("integer")) {
+                        primitive = new JsonPrimitive(Float.parseFloat(tempString));
+                    } else if (type.equals("boolean")) {
+                        primitive = new JsonPrimitive(Boolean.parseBoolean(tempString));
+                    } else primitive = new JsonPrimitive(tempString);
+                    arr.set(j, primitive);
+                } else if (type.equals("object")) {
+                    JsonObject tempObj = (JsonObject) schema.getAsJsonArray("items").get(j);
+                    JsonObject tempele = (JsonObject) arr.get(j);
+                    Set<Map.Entry<String, JsonElement>> entryInput = tempele.entrySet();
+                    this.parseObject(tempele,tempObj);
+                }
             }
             return true;
-        } else if (type.equals("object")) {
-            JsonObject tempObj = (JsonObject) schema.getAsJsonArray("items").get(0);
-            JsonObject tempele = (JsonObject) arr.get(arr.size() - 1);
-            Set<Map.Entry<String, JsonElement>> entries = tempele.entrySet();//will return members of your object
-            String finalKey = "";
-            for (Map.Entry<String, JsonElement> entry : entries) {
-                finalKey = entry.getKey();
-            }
-            tempObj = tempObj.getAsJsonObject("properties").getAsJsonObject(finalKey);
-            for (int i = 0; i < arr.size(); i++) {
-                this.parseArrayObject((JsonObject) arr.get(i), tempObj);
-            }
-        }
-        return false;
+        } return true;
     }
 
-    private boolean parseObject(Map.Entry<String, JsonElement> input, JsonObject schema) {
-        JsonObject inputObject = (JsonObject) input.getValue();
+    private boolean parseObject(JsonObject inputObject, JsonObject schema) {
         JsonObject schemaObject = schema.getAsJsonObject("properties");
         Set<Map.Entry<String, JsonElement>> entries = inputObject.entrySet();
         for (Map.Entry<String, JsonElement> entry : entries) {
@@ -136,7 +127,7 @@ public class SchemaParser {
             } else if (type.equals("array")) {
                 this.parseArray(temp, tempSchema);
             } else if (type.equals("object")) {
-                this.parseObject(temp, tempSchema);
+                this.parseObject((JsonObject)temp.getValue(), tempSchema);
             }
         }
         return inputObject.toString();
