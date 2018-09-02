@@ -2,8 +2,10 @@ package com.GDSoft.JSONLibs;
 
 import com.google.gson.*;
 
+import com.google.gson.internal.LinkedTreeMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -64,8 +66,15 @@ public class SchemaParser {
                 } else if (type.equals("object")) {
                     JsonObject tempObj = (JsonObject) schema.getAsJsonArray("items").get(j);
                     JsonObject tempele = (JsonObject) arr.get(j);
-                    Set<Map.Entry<String, JsonElement>> entryInput = tempele.entrySet();
                     this.parseObject(tempele,tempObj);
+                } else if (type.equals("array")) {
+                    JsonObject tempObj = (JsonObject) schema.getAsJsonArray("items").get(j);
+                    JsonObject sample = new JsonObject();
+                    sample.add("test",arr.get(j));
+                    Set<Map.Entry<String, JsonElement>> entries = sample.entrySet();
+                    for (Map.Entry<String, JsonElement> entry : entries) {
+                        parseArray(entry,tempObj);
+                    }
                 }
             }
             return true;
@@ -82,22 +91,17 @@ public class SchemaParser {
                 replacePrimitive(entry, schemaObj);
             } else if (type.equals("array")) {
                 parseArray(entry, schemaObj);
+            } else if (type.equals("object")) {
+                parseObject((JsonObject) entry.getValue(),schemaObj);
             }
         }
         return true;
     }
 
-    private boolean parseArrayObject(JsonObject inputObject, JsonObject schemaObject) {
-        Set<Map.Entry<String, JsonElement>> entries = inputObject.entrySet();
+    private void parseNestedArray(JsonArray inputObject, JsonObject schemaObject) {
         String type = schemaObject.get("type").toString().replaceAll("^\"|\"$", "");
-        for (Map.Entry<String, JsonElement> entry : entries) {
-            if (type.equals("number") || type.equals("boolean") || type.equals("string")) {
-                replacePrimitive(entry, schemaObject);
-            } else if (type.equals("array")) {
-                parseArray(entry, schemaObject);
-            }
-        }
-        return true;
+
+
     }
 
     /**

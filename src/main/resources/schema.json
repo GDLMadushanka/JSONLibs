@@ -103,6 +103,101 @@
           "type": "number"
         }
       ]
+    },
+    "nestedObject": {
+      "type": "object",
+      "properties": {
+        "Lahiru": {
+          "type": "object",
+          "properties": {
+            "age": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "age"
+          ]
+        },
+        "Nimal": {
+          "type": "object",
+          "properties": {
+            "married": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "married"
+          ]
+        },
+        "Kamal": {
+          "type": "object",
+          "properties": {
+            "scores": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "required": [
+            "scores"
+          ]
+        }
+      },
+      "required": [
+        "Lahiru",
+        "Nimal",
+        "Kamal"
+      ]
+    },
+    "nestedArray": {
+      "type": "array",
+      "items": [
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        },
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      ]
     }
   },
   "required": [
@@ -112,6 +207,8 @@
     "simpleArray",
     "objWithArray",
     "arrayOfObjects",
-    "singleObjArray"
+    "singleObjArray",
+    "nestedObject",
+    "nestedArray"
   ]
 }
