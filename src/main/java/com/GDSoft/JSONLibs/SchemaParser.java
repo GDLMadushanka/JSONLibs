@@ -34,22 +34,24 @@ public class SchemaParser {
 
     private void replacePrimitive(Map.Entry<String, JsonElement> input, JsonObject schemaObject) {
         String type = schemaObject.get(TYPE_KEY).getAsString().replaceAll(REGEX, "");
-        JsonPrimitive primitive;
         String tempString = input.getValue().toString().replaceAll(REGEX, "");
-        if (!tempString.equals(NULL_STRING)) {
+        input.setValue(replacePrimitive(tempString,type));
+    }
+
+    private JsonPrimitive replacePrimitive(String value,String type) {
+        JsonPrimitive primitive = null;
+        if (!value.equals(NULL_STRING)) {
             if (NUMERIC_KEYS.contains(type)) {
-                primitive = new JsonPrimitive(Float.valueOf(tempString));
-                input.setValue(primitive);
+                primitive = new JsonPrimitive(Float.valueOf(value));
             } else if (BOOLEAN_KEYS.contains(type)) {
-                primitive = new JsonPrimitive(Boolean.valueOf(tempString));
-                input.setValue(primitive);
+                primitive = new JsonPrimitive(Boolean.valueOf(value));
             } else if (NOMINAL_KEYS.contains(type)) {
-                primitive = new JsonPrimitive(tempString);
-                input.setValue(primitive);
+                primitive = new JsonPrimitive(value);
             }
         } else {
-            input.setValue(new JsonNull());
+            primitive = new JsonPrimitive(new JsonNull().toString());
         }
+        return primitive;
     }
 
     private void parseArray(Map.Entry<String, JsonElement> input, JsonObject schema) {
@@ -60,7 +62,7 @@ public class SchemaParser {
             input.setValue(array);
         } else {
             JsonArray jsonArray = schema.getAsJsonArray(ITEM_KEY);
-            JsonArray arr = null;
+            JsonArray arr = new JsonArray();
             if (input.getValue().isJsonArray()) {
                 arr = (JsonArray) input.getValue();
             } else if (input.getValue().isJsonNull()) {
@@ -71,17 +73,8 @@ public class SchemaParser {
                         (REGEX, "");
                 if (BOOLEAN_KEYS.contains(type) || NOMINAL_KEYS.contains(type) || NUMERIC_KEYS.contains(type)) {
                     String tempString = arr.get(j).toString().replaceAll(REGEX, "");
-                    JsonPrimitive primitive;
-                    if (!tempString.equals(NULL_STRING)) {
-                        if (NUMERIC_KEYS.contains(type)) {
-                            primitive = new JsonPrimitive(Float.parseFloat(tempString));
-                        } else if (BOOLEAN_KEYS.contains(type)) {
-                            primitive = new JsonPrimitive(Boolean.parseBoolean(tempString));
-                        } else primitive = new JsonPrimitive(tempString);
-                        arr.set(j, primitive);
-                    } else {
-                        arr.set(j, new JsonNull());
-                    }
+                    JsonPrimitive primitive = replacePrimitive(tempString,type);
+                    arr.set(j,primitive);
                 } else if (OBJECT_KEYS.contains(type)) {
                     JsonObject tempObj = (JsonObject) schema.getAsJsonArray(ITEM_KEY).get(j);
                     JsonObject tempele = (JsonObject) arr.get(j);
