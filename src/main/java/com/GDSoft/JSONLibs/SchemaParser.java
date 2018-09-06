@@ -32,6 +32,21 @@ public class SchemaParser {
             new String[]{"array"}
     ));
 
+    // restriction keywords
+    private static final Set<String> RESTRICTION_STRING = new HashSet<>(Arrays.asList(
+            new String[]{"minLength", "maxLength", "pattern"}
+    ));
+    private static final Set<String> RESTRICTION_NUMERIC = new HashSet<>(Arrays.asList(
+            new String[]{"minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum", "multipleOf"}
+    ));
+    private static final Set<String> RESTRICTION_ARRAY = new HashSet<>(Arrays.asList(
+            new String[]{"minItems", "maxItems", "items", "uniqueItems"}
+    ));
+    private static final Set<String> RESTRICTION_OBJECT = new HashSet<>(Arrays.asList(
+            new String[]{"properties", "additionalProperties", "required", "minProperties", "maxProperties",
+                    "dependencies", "patternProperties", "regexp"}
+    ));
+
     private void replacePrimitive(Map.Entry<String, JsonElement> input, JsonObject schemaObject) {
         String type = schemaObject.get(TYPE_KEY).getAsString().replaceAll(REGEX, "");
         String tempString = input.getValue().toString().replaceAll(REGEX, "");
