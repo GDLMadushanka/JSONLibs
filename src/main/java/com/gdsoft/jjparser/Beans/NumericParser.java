@@ -4,15 +4,16 @@ import com.gdsoft.jjparser.ParserConstants;
 import com.gdsoft.jjparser.ParserException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import java.math.BigDecimal;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 public class NumericParser {
 
     private static int minimum;
     private static int maximum;
-    private static int maxLength;
-    private static String pattern;
+    private static boolean exclusiveMinimum;
+    private static boolean exclusiveMaximum;
+    private static Double multipleOf;
 
     private static final String INTEGER_STRING = "integer";
     private static final String NUMBER_STRING = "number";
@@ -27,6 +28,22 @@ public class NumericParser {
         if (NumberUtils.isCreatable(value)) {
             String type = inputObject.get(ParserConstants.TYPE_KEY).getAsString().replaceAll(ParserConstants.REGEX, "");
             Double doubleValue = Double.parseDouble(value);
+            if (inputObject.has(EXCLUSIVE_MINIMUM)) {
+                exclusiveMinimum = Boolean.parseBoolean(inputObject.get(EXCLUSIVE_MINIMUM).getAsString().replaceAll
+                        (ParserConstants.REGEX, ""));
+            }
+            if (inputObject.has(EXCLUSIVE_MAXIMUM)) {
+                exclusiveMaximum = Boolean.parseBoolean(inputObject.get(EXCLUSIVE_MAXIMUM).getAsString().replaceAll
+                        (ParserConstants.REGEX, ""));
+
+            }
+            if (inputObject.has(MULTIPLE_OF)) {
+                multipleOf = Double.parseDouble(inputObject.get(MULTIPLE_OF).getAsString().replaceAll
+                        (ParserConstants.REGEX, ""));
+                if (doubleValue % multipleOf != 0) {
+                    throw new ParserException("Number " + value + " is not a multiple of " + multipleOf);
+                }
+            }
             if (inputObject.has(MINIMUM_VALUE)) {
                 String minimumString = inputObject.get(MINIMUM_VALUE).getAsString().replaceAll(ParserConstants.REGEX,
                         "");
@@ -34,6 +51,9 @@ public class NumericParser {
                     minimum = Integer.valueOf(minimumString);
                     if (doubleValue < minimum) {
                         throw new ParserException("Number " + value + " is less than the minimum allowed value");
+                    }
+                    if (doubleValue == minimum && exclusiveMinimum) {
+                        throw new ParserException("Number " + value + " is equal to the minimum allowed value");
                     }
                 }
             }
@@ -44,6 +64,9 @@ public class NumericParser {
                     maximum = Integer.valueOf(maximumString);
                     if (doubleValue > maximum) {
                         throw new ParserException("Number " + value + " is greater than the maximum allowed value");
+                    }
+                    if (doubleValue == maximum && exclusiveMaximum) {
+                        throw new ParserException("Number " + value + " is equal to the maximum allowed value");
                     }
                 }
             }
