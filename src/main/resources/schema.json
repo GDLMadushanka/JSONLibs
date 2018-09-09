@@ -3,10 +3,14 @@
   "type": "object",
   "properties": {
     "fruit": {
-      "type": "string"
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 6
     },
     "price": {
-      "type": "integer"
+      "type": "integer",
+      "minimum": 2,
+      "maximum": 20
     },
     "simpleObject": {
       "type": "object",

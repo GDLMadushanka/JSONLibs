@@ -1,4 +1,4 @@
-package com.GDSoft.JSONLibs;
+package com.gdsoft.jjparser;
 
 import org.apache.commons.io.IOUtils;
 
@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class SampleCodes {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParserException {
         //Reading input.json and validatingInput.json from files
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         //InputStream inputStream = classloader.getResourceAsStream("input.json");
@@ -19,7 +19,7 @@ public class SampleCodes {
         String validatingInput = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 
         //creating instances
-        SchemaBuilder schemaBuilder = new SchemaBuilder();
+
         SchemaParser parser = new SchemaParser();
 
         //creating the schema from input JSON

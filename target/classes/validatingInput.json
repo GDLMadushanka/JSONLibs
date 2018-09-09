@@ -1,6 +1,6 @@
 {
   "fruit"           : "Apple",
-  "price"           : "23",
+  "price"           : "-23",
   "simpleObject"    : {"age":"234"},
   "simpleArray"     : ["true","false","true"],
   "objWithArray"    : {"marks":["34","45","56","67"]},

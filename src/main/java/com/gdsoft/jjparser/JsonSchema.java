@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.GDSoft.JSONLibs;
+package com.gdsoft.jjparser;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
