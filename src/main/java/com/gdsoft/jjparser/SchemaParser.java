@@ -36,9 +36,7 @@ public class SchemaParser {
     ));
 
     // restriction keywords
-    private static final Set<String> RESTRICTION_ARRAY = new HashSet<>(Arrays.asList(
-            new String[]{"minItems", "maxItems", "items", "uniqueItems"}
-    ));
+
     private static final Set<String> RESTRICTION_OBJECT = new HashSet<>(Arrays.asList(
             new String[]{"properties", "additionalProperties", "required", "minProperties", "maxProperties",
                     "dependencies", "patternProperties", "regexp"}
