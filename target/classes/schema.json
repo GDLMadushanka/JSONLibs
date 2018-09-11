@@ -37,7 +37,9 @@
         {
           "type": "string"
         }
-      ]
+      ],
+      "minItems":1,
+      "maxItems":3
     },
     "objWithArray": {
       "type": "object",

@@ -1,5 +1,7 @@
 package com.gdsoft.jjparser;
 
+import com.gdsoft.jjparser.Beans.ArrayValidator;
+import com.gdsoft.jjparser.Beans.DataTypeConverter;
 import com.gdsoft.jjparser.Beans.NominalParser;
 import com.gdsoft.jjparser.Beans.NumericParser;
 import com.google.gson.*;
@@ -55,13 +57,17 @@ public class SchemaParser {
         }
     }
 
-    private JsonPrimitive replacePrimitive(String value, String type) {
+    private JsonPrimitive replacePrimitive(String value, String type) throws ParserException {
         JsonPrimitive primitive = null;
         if (!value.equals(NULL_STRING)) {
             if (NUMERIC_KEYS.contains(type)) {
-                primitive = new JsonPrimitive(Float.valueOf(value));
+                if (type.equals("integer")) {
+                    primitive = new JsonPrimitive(DataTypeConverter.convertToInt(value));
+                } else {
+                    primitive = new JsonPrimitive(DataTypeConverter.converToDouble(value));
+                }
             } else if (BOOLEAN_KEYS.contains(type)) {
-                primitive = new JsonPrimitive(Boolean.valueOf(value));
+                primitive = new JsonPrimitive(DataTypeConverter.convertToBoolean(value));
             } else if (NOMINAL_KEYS.contains(type)) {
                 primitive = new JsonPrimitive(value);
             }
@@ -72,6 +78,7 @@ public class SchemaParser {
     }
 
     private void parseArray(Map.Entry<String, JsonElement> input, JsonObject schema) throws ParserException {
+        ArrayValidator.validateArray(input, schema);
         //Convert single element to an array
         if (input.getValue().isJsonPrimitive() || input.getValue().isJsonNull()) {
             JsonArray array = new JsonArray();
@@ -79,30 +86,28 @@ public class SchemaParser {
             input.setValue(array);
         } else {
             JsonArray jsonArray = schema.getAsJsonArray(ITEM_KEY);
-            JsonArray arr = new JsonArray();
+            JsonArray arr;
             if (input.getValue().isJsonArray()) {
                 arr = (JsonArray) input.getValue();
-            } else if (input.getValue().isJsonNull()) {
-                return;
-            }
-            for (int j = 0; j < arr.size(); j++) {
-                String type = ((JsonObject) (jsonArray.get(j))).get(TYPE_KEY).toString().replaceAll
-                        (REGEX, "");
-                if (BOOLEAN_KEYS.contains(type) || NOMINAL_KEYS.contains(type) || NUMERIC_KEYS.contains(type)) {
-                    String tempString = arr.get(j).toString().replaceAll(REGEX, "");
-                    JsonPrimitive primitive = replacePrimitive(tempString, type);
-                    arr.set(j, primitive);
-                } else if (OBJECT_KEYS.contains(type)) {
-                    JsonObject tempObj = (JsonObject) schema.getAsJsonArray(ITEM_KEY).get(j);
-                    JsonObject tempele = (JsonObject) arr.get(j);
-                    this.parseObject(tempele, tempObj);
-                } else if (ARRAY_KEYS.contains(type)) {
-                    JsonObject tempObj = (JsonObject) schema.getAsJsonArray(ITEM_KEY).get(j);
-                    JsonObject sample = new JsonObject();
-                    sample.add("test", arr.get(j));
-                    Set<Map.Entry<String, JsonElement>> entries = sample.entrySet();
-                    for (Map.Entry<String, JsonElement> entry : entries) {
-                        parseArray(entry, tempObj);
+                for (int j = 0; j < arr.size(); j++) {
+                    String type = ((JsonObject) (jsonArray.get(j))).get(TYPE_KEY).toString().replaceAll
+                            (REGEX, "");
+                    if (BOOLEAN_KEYS.contains(type) || NOMINAL_KEYS.contains(type) || NUMERIC_KEYS.contains(type)) {
+                        String tempString = arr.get(j).toString().replaceAll(REGEX, "");
+                        JsonPrimitive primitive = replacePrimitive(tempString, type);
+                        arr.set(j, primitive);
+                    } else if (OBJECT_KEYS.contains(type)) {
+                        JsonObject tempObj = (JsonObject) schema.getAsJsonArray(ITEM_KEY).get(j);
+                        JsonObject tempele = (JsonObject) arr.get(j);
+                        this.parseObject(tempele, tempObj);
+                    } else if (ARRAY_KEYS.contains(type)) {
+                        JsonObject tempObj = (JsonObject) schema.getAsJsonArray(ITEM_KEY).get(j);
+                        JsonObject sample = new JsonObject();
+                        sample.add("test", arr.get(j));
+                        Set<Map.Entry<String, JsonElement>> entries = sample.entrySet();
+                        for (Map.Entry<String, JsonElement> entry : entries) {
+                            parseArray(entry, tempObj);
+                        }
                     }
                 }
             }

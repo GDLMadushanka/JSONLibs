@@ -45,5 +45,10 @@
             <artifactId>commons-lang</artifactId>
             <version>2.6.0.wso2v1</version>
         </dependency>
+      <dependency>
+        <groupId>org.jetbrains</groupId>
+        <artifactId>annotations-java5</artifactId>
+        <version>16.0.1</version>
+      </dependency>
     </dependencies>
 </project>

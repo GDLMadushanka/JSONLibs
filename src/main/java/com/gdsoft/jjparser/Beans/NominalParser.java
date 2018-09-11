@@ -20,7 +20,7 @@ public class NominalParser {
         if (inputObject.has(MAX_LENGTH)) {
             String maxLengthString = inputObject.get(MAX_LENGTH).getAsString().replaceAll(ParserConstants.REGEX, "");
             if (!maxLengthString.isEmpty()) {
-                maxLength = Integer.valueOf(maxLengthString);
+                maxLength = DataTypeConverter.convertToInt(maxLengthString);
                 if (value.length() > maxLength) {
                     throw new ParserException("String \"" + value + "\" violated the max length constraint");
                 }
@@ -29,7 +29,7 @@ public class NominalParser {
         if (inputObject.has(MIN_LENGTH)) {
             String minLengthString = inputObject.get(MIN_LENGTH).getAsString().replaceAll(ParserConstants.REGEX, "");
             if (!minLengthString.isEmpty()) {
-                minLength = Integer.valueOf(minLengthString);
+                minLength = DataTypeConverter.convertToInt(minLengthString);
                 if (value.length() < minLength) {
                     throw new ParserException("String \"" + value + "\" violated the min length constraint");
                 }

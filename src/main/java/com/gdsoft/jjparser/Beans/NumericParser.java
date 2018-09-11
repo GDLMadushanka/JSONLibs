@@ -27,18 +27,18 @@ public class NumericParser {
     public static JsonPrimitive parseNumeric(JsonObject inputObject, String value) throws ParserException {
         if (NumberUtils.isCreatable(value)) {
             String type = inputObject.get(ParserConstants.TYPE_KEY).getAsString().replaceAll(ParserConstants.REGEX, "");
-            Double doubleValue = Double.parseDouble(value);
+            Double doubleValue = DataTypeConverter.converToDouble(value);
             if (inputObject.has(EXCLUSIVE_MINIMUM)) {
-                exclusiveMinimum = Boolean.parseBoolean(inputObject.get(EXCLUSIVE_MINIMUM).getAsString().replaceAll
+                exclusiveMinimum = DataTypeConverter.convertToBoolean(inputObject.get(EXCLUSIVE_MINIMUM).getAsString().replaceAll
                         (ParserConstants.REGEX, ""));
             }
             if (inputObject.has(EXCLUSIVE_MAXIMUM)) {
-                exclusiveMaximum = Boolean.parseBoolean(inputObject.get(EXCLUSIVE_MAXIMUM).getAsString().replaceAll
+                exclusiveMaximum = DataTypeConverter.convertToBoolean(inputObject.get(EXCLUSIVE_MAXIMUM).getAsString().replaceAll
                         (ParserConstants.REGEX, ""));
 
             }
             if (inputObject.has(MULTIPLE_OF)) {
-                multipleOf = Double.parseDouble(inputObject.get(MULTIPLE_OF).getAsString().replaceAll
+                multipleOf = DataTypeConverter.converToDouble(inputObject.get(MULTIPLE_OF).getAsString().replaceAll
                         (ParserConstants.REGEX, ""));
                 if (doubleValue % multipleOf != 0) {
                     throw new ParserException("Number " + value + " is not a multiple of " + multipleOf);
@@ -48,7 +48,7 @@ public class NumericParser {
                 String minimumString = inputObject.get(MINIMUM_VALUE).getAsString().replaceAll(ParserConstants.REGEX,
                         "");
                 if (!minimumString.isEmpty()) {
-                    minimum = Integer.valueOf(minimumString);
+                    minimum = DataTypeConverter.convertToInt(minimumString);
                     if (doubleValue < minimum) {
                         throw new ParserException("Number " + value + " is less than the minimum allowed value");
                     }
@@ -61,7 +61,7 @@ public class NumericParser {
                 String maximumString = inputObject.get(MAXIMUM_VALUE).getAsString().replaceAll(ParserConstants.REGEX,
                         "");
                 if (!maximumString.isEmpty()) {
-                    maximum = Integer.valueOf(maximumString);
+                    maximum = DataTypeConverter.convertToInt(maximumString);
                     if (doubleValue > maximum) {
                         throw new ParserException("Number " + value + " is greater than the maximum allowed value");
                     }
