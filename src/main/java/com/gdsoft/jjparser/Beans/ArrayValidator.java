@@ -48,7 +48,7 @@ public class ArrayValidator {
                 throw new ParserException("Array violated the minimum no of items constraint");
             }
         } else {
-            JsonArray jsonArray = schema.getAsJsonArray(ParserConstants.ITEM_KEY);
+           // JsonArray jsonArray = schema.getAsJsonArray(ParserConstants.ITEM_KEY);
             JsonArray arr;
             if (input.getValue().isJsonArray()) {
                 arr = (JsonArray) input.getValue();

@@ -85,13 +85,25 @@ public class SchemaParser {
             array.add(input.getValue());
             input.setValue(array);
         } else {
-            JsonArray jsonArray = schema.getAsJsonArray(ITEM_KEY);
+            JsonArray jsonArray = null;
+            boolean isArray = false;
+            String type = null;
+            if (schema.get(ITEM_KEY).isJsonArray()) {
+                jsonArray = schema.getAsJsonArray(ITEM_KEY);
+                isArray = true;
+            } else if (schema.get(ITEM_KEY).isJsonObject()) {
+                JsonObject tempObj = schema.get(ITEM_KEY).getAsJsonObject();
+                type = tempObj.get(TYPE_KEY).toString().replaceAll(REGEX, "");
+                isArray = false;
+            }
             JsonArray arr;
             if (input.getValue().isJsonArray()) {
                 arr = (JsonArray) input.getValue();
                 for (int j = 0; j < arr.size(); j++) {
-                    String type = ((JsonObject) (jsonArray.get(j))).get(TYPE_KEY).toString().replaceAll
-                            (REGEX, "");
+                    if (isArray) {
+                        type = ((JsonObject) (jsonArray.get(j))).get(TYPE_KEY).toString().replaceAll
+                                (REGEX, "");
+                    }
                     if (BOOLEAN_KEYS.contains(type) || NOMINAL_KEYS.contains(type) || NUMERIC_KEYS.contains(type)) {
                         String tempString = arr.get(j).toString().replaceAll(REGEX, "");
                         JsonPrimitive primitive = replacePrimitive(tempString, type);

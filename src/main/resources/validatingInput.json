@@ -7,5 +7,6 @@
   "arrayOfObjects"  : [{"maths":"90"},{"physics":"95"},{"chemistry":"65"}],
   "singleObjArray"  : 1.618,
   "nestedObject"    : {"Lahiru" :{"age":"27"},"Nimal" :{"married" :"true"}, "Kamal" : {"scores": ["24",45,"67"]}},
-  "nestedArray"     : [[12,"23",34],["true",false],["Linking Park","Coldplay"]]
+  "nestedArray"     : [[12,"23",34],["true",false],["Linking Park","Coldplay"]],
+  "allNumericArray" : ["3","1","4"]
 }
