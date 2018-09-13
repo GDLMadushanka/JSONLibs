@@ -17,7 +17,7 @@ public class ArrayValidator {
     private static int minItems;
     private static int maxItems;
     private static String arrayItems;
-    private static String uniqueItems;
+    private static boolean uniqueItems;
     private static int currentCount;
 
     public static void validateArray(Map.Entry<String, JsonElement> input, JsonObject
@@ -25,6 +25,12 @@ public class ArrayValidator {
         minItems = -1;
         maxItems = -1;
         currentCount = 0;
+        if (schema.has(UNIQUE_ITEMS)) {
+            String uniqueItemsString = schema.get(UNIQUE_ITEMS).getAsString().replaceAll(ParserConstants.REGEX, "");
+            if (!uniqueItemsString.isEmpty()) {
+                uniqueItems = DataTypeConverter.convertToBoolean(uniqueItemsString);
+            }
+        }
         if (schema.has(MIN_ITEMS)) {
             String minItemsString = schema.get(MIN_ITEMS).getAsString().replaceAll(ParserConstants.REGEX, "");
             if (!minItemsString.isEmpty()) {
@@ -57,6 +63,17 @@ public class ArrayValidator {
                     throw new ParserException("Array violated the minimum no of items constraint");
                 } else if (maxItems != -1 && maxItems < arrSize) {
                     throw new ParserException("Array violated the maximum no of items constraint");
+                }
+                if(uniqueItems) {
+                    JsonArray tempArray = new JsonArray();
+                    tempArray.add(arr.get(0));
+                    if(arrSize>1) {
+                        for(int i=1;i<arrSize;i++) {
+                            if(tempArray.contains(arr.get(i))) {
+                                throw new ParserException("Array has duplicate elements");
+                            } tempArray.add(arr.get(i));
+                        }
+                    }
                 }
             }
         }

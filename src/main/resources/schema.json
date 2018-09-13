@@ -39,7 +39,8 @@
         }
       ],
       "minItems":1,
-      "maxItems":3
+      "maxItems":3,
+      "uniqueItems" : false
     },
     "objWithArray": {
       "type": "object",
@@ -214,7 +215,8 @@
           "type": "integer"
         },
       "minItems":1,
-      "maxItems":3
+      "maxItems":3,
+      "uniqueItems" :true
     }
   },
   "required": [
