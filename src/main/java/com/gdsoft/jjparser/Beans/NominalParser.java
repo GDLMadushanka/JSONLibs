@@ -35,6 +35,15 @@ public class NominalParser {
                 }
             }
         }
+        if (inputObject.has(STR_PATTERN)) {
+            String patternString = inputObject.get(STR_PATTERN).getAsString().replaceAll(ParserConstants.REGEX, "");
+            if (!patternString.isEmpty()) {
+                if (!value.matches(patternString)) {
+                    throw new ParserException("String \"" + value + "\" violated the regex constraint " +
+                            patternString);
+                }
+            }
+        }
         return new JsonPrimitive(value);
     }
 }

@@ -1,5 +1,5 @@
 {
-  "fruit"           : "Apple",
+  "fruit"           : "12345",
   "price"           : "7.5",
   "simpleObject"    : {"age":"234"},
   "simpleArray"     : ["true","false","true"],
