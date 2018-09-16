@@ -230,5 +230,6 @@
     "singleObjArray",
     "nestedObject",
     "nestedArray"
-  ]
+  ],
+  "additionalProperties": true
 }

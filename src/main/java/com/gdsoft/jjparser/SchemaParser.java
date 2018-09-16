@@ -4,6 +4,7 @@ import com.gdsoft.jjparser.Beans.ArrayValidator;
 import com.gdsoft.jjparser.Beans.DataTypeConverter;
 import com.gdsoft.jjparser.Beans.NominalParser;
 import com.gdsoft.jjparser.Beans.NumericParser;
+import com.gdsoft.jjparser.Beans.ObjectValidator;
 import com.google.gson.*;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -35,13 +36,6 @@ public class SchemaParser {
     ));
     private static final Set<String> ARRAY_KEYS = new HashSet<>(Arrays.asList(
             new String[]{"array"}
-    ));
-
-    // restriction keywords
-
-    private static final Set<String> RESTRICTION_OBJECT = new HashSet<>(Arrays.asList(
-            new String[]{"properties", "additionalProperties", "required", "minProperties", "maxProperties",
-                    "dependencies", "patternProperties", "regexp"}
     ));
 
     private void replacePrimitive(Map.Entry<String, JsonElement> input, JsonObject schemaObject) throws
@@ -127,6 +121,7 @@ public class SchemaParser {
     }
 
     private void parseObject(JsonObject inputObject, JsonObject schema) throws ParserException {
+        ObjectValidator.validateObject(inputObject,schema);
         JsonObject schemaObject = schema.getAsJsonObject("properties");
         Set<Map.Entry<String, JsonElement>> entries = inputObject.entrySet();
         for (Map.Entry<String, JsonElement> entry : entries) {
@@ -157,18 +152,22 @@ public class SchemaParser {
         JsonElement input = parser.parse(inputJson);
         JsonObject inputObject = (JsonObject) input;
 
+        ObjectValidator.validateObject(inputObject,schemaObject);
+
         schemaObject = (JsonObject) schemaObject.get("properties");
         Set<Map.Entry<String, JsonElement>> entryInput = inputObject.entrySet();
 
         for (Map.Entry<String, JsonElement> temp : entryInput) {
-            JsonObject tempSchema = (JsonObject) schemaObject.get(temp.getKey());
-            String type = tempSchema.get(TYPE_KEY).getAsString().replaceAll(REGEX, "");
-            if (NOMINAL_KEYS.contains(type) || BOOLEAN_KEYS.contains(type) || NUMERIC_KEYS.contains(type)) {
-                this.replacePrimitive(temp, tempSchema);
-            } else if (ARRAY_KEYS.contains(type)) {
-                this.parseArray(temp, tempSchema);
-            } else if (OBJECT_KEYS.contains(type)) {
-                this.parseObject((JsonObject) temp.getValue(), tempSchema);
+            if (schemaObject.has(temp.getKey())) {
+                JsonObject tempSchema = (JsonObject) schemaObject.get(temp.getKey());
+                String type = tempSchema.get(TYPE_KEY).getAsString().replaceAll(REGEX, "");
+                if (NOMINAL_KEYS.contains(type) || BOOLEAN_KEYS.contains(type) || NUMERIC_KEYS.contains(type)) {
+                    this.replacePrimitive(temp, tempSchema);
+                } else if (ARRAY_KEYS.contains(type)) {
+                    this.parseArray(temp, tempSchema);
+                } else if (OBJECT_KEYS.contains(type)) {
+                    this.parseObject((JsonObject) temp.getValue(), tempSchema);
+                }
             }
         }
         return inputObject.toString();
