@@ -231,5 +231,7 @@
     "nestedObject",
     "nestedArray"
   ],
-  "additionalProperties": true
+  "additionalProperties": true,
+  "minProperties": 15,
+  "maxProperties": 20
 }
