@@ -8,4 +8,5 @@ public final class ParserConstants {
     public static final String REGEX = "^\"|\"$";
     public static final String TYPE_KEY = "type";
     public static final String ITEM_KEY = "items";
+
 }

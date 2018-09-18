@@ -2,6 +2,7 @@ package com.gdsoft.jjparser.Beans;
 
 import com.gdsoft.jjparser.ParserConstants;
 import com.gdsoft.jjparser.ParserException;
+import com.gdsoft.jjparser.SchemaParser;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -69,6 +70,15 @@ public class ObjectValidator {
                 }
             }
         }
+        if (schema.has(PATTERN_PROPERTIES)) {
+            JsonObject patternsObject = schema.getAsJsonObject(PATTERN_PROPERTIES);
+            Set<Map.Entry<String, JsonElement>> patterns = patternsObject.entrySet();
+            for (Map.Entry<String, JsonElement> pattern : patterns) {
+                String regex = pattern.getKey();
+                JsonObject tempSchema = pattern.getValue().getAsJsonObject();
+                String type = tempSchema.get(ParserConstants.TYPE_KEY).getAsString().replaceAll(ParserConstants.REGEX, "");
 
+            }
+        }
     }
 }

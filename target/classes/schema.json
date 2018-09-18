@@ -12,7 +12,7 @@
       "type": "number",
       "minimum": 2,
       "maximum": 20,
-      "exclusiveMaximum" : true,
+      "exclusiveMaximum": true,
       "multipleOf": 2.5
     },
     "simpleObject": {
@@ -39,9 +39,9 @@
           "type": "string"
         }
       ],
-      "minItems":1,
-      "maxItems":3,
-      "uniqueItems" : false
+      "minItems": 1,
+      "maxItems": 3,
+      "uniqueItems": false
     },
     "objWithArray": {
       "type": "object",
@@ -211,13 +211,12 @@
     },
     "allNumericArray": {
       "type": "array",
-      "items":
-        {
-          "type": "integer"
-        },
-      "minItems":1,
-      "maxItems":3,
-      "uniqueItems" :true
+      "items": {
+        "type": "integer"
+      },
+      "minItems": 1,
+      "maxItems": 3,
+      "uniqueItems": true
     }
   },
   "required": [
@@ -232,6 +231,11 @@
     "nestedArray"
   ],
   "additionalProperties": true,
-  "minProperties": 15,
-  "maxProperties": 20
+  "minProperties": 10,
+  "maxProperties": 20,
+  "patternProperties": {
+    "_goals$": {
+      "type": "integer"
+    }
+  }
 }
